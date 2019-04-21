@@ -8,6 +8,9 @@ from .forms import LoginForm, UserRegistrationForm, \
 from .models import Profile
 from accounts.utils import render_to_pdf
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+import tempfile
+import pdfkit
 
 @login_required
 def makecv(request):
@@ -19,22 +22,8 @@ def makecv(request):
 
 
 def renderpdf(request):
-    getprofile = Profile.objects.all()
-    contexts = {
-        'getprofile' : getprofile,
-    }
-    pdf = render_to_pdf('cvgen.html', contexts)
-    if pdf:
-        response = HttpResponse(pdf, content_type='application/pdf')
-        filename = "Invoice_%s.pdf" %("12341231")
-        content = "inline; filename='%s'" %(filename)
-        download = request.GET.get("download")
-        if download:
-            content = "attachment; filename='%s'" %(filename)
-        response['Content-Disposition'] = content
-        return response
-    return HttpResponse("Not found")
-
+     pdfkit.from_file('test.html', 'out.pdf')
+        
 
 def index(request):
     return render(request, 'index.html')
